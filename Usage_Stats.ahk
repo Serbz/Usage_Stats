@@ -40,10 +40,10 @@ SetTimer, Three, 25
 SetTimer, Three, on
 SetTimer, Usage, 50
 SetTimer, Usage, on
-SetTimer, UsageReport, 50000
+SetTimer, UsageReport, 10000
 SetTimer, UsageReport, on
 ;-;-;-;-;-;-; Set and Show String on GUI 3 ;-;-;-;-;-;-;
-3String=Initialization Finish.
+3String=Usage_Stats - Initialization Finish.
 3Time:=40*1 ;; 40 = 1 second
 GuiConF(3,3,3String,-1)
 
@@ -179,6 +179,7 @@ UsageReport:
 ifExist, %A_ScriptDir%\Usage_Report.txt
 	fileDelete, %A_ScriptDir%\Usage_Report.txt
 for key, val in Usage {
-	fileAppend, %key%`, %val%`n, %A_ScriptDir%\Usage_Report.txt
+	time_val := round(val/1000, 2)
+	fileAppend, %key%`, %time_val%`n, %A_ScriptDir%\Usage_Report.txt
 }
 return
