@@ -26,6 +26,28 @@ variable:=0
 GuiActiveArray:=Array()
 Usage:=Array()
 
+;-;-;-;-;-;-; Load previous report into table ;-;-;-;-;-;-;
+ifExist, %A_ScriptDir%\Usage_Report.txt
+{
+	loop, read, %A_ScriptDir%\Usage_Report.txt
+	{
+		total_lines = %A_Index%
+	}
+	line_counter := 0
+	while (line_counter < total_lines){
+		line_counter++
+		fileReadLine, line, %A_ScriptDir%\Usage_Report.txt, line_counter
+		LineSpl := StrSplit(line, "|||")
+		LineSplIndex := LineSpl.MaxIndex()
+		Lspl1:=LineSpl[1]
+		Lspl1:= % RegExReplace(LineSpl, " |", "|")
+		if (Lspl1 != "" and Lspl1 != " ") {
+			Lspl2:=LineSpl[2]
+			Usage[Lspl1]:=Lspl2
+		}
+	}
+}
+
 ;-;-;-;-;-;-; Build 5 GUI's ;-;-;-;-;-;-;
 GuiNumber:=0
 while (GuiNumber<5) {
@@ -180,6 +202,6 @@ ifExist, %A_ScriptDir%\Usage_Report.txt
 	fileDelete, %A_ScriptDir%\Usage_Report.txt
 for key, val in Usage {
 	time_val := round(val/1000, 2)
-	fileAppend, %key%`, %time_val%`n, %A_ScriptDir%\Usage_Report.txt
+	fileAppend,%key%`|`|`|%time_val%`n, %A_ScriptDir%\Usage_Report.txt
 }
 return
